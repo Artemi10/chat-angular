@@ -1,0 +1,6 @@
+.preloader{
+  margin: 0;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+}

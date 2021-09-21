@@ -1,0 +1,28 @@
+<div class="verify-container">
+  <div class="row verify-page">
+    <div class="col s12 z-depth-6 card-panel">
+      <form class="verify-form" [formGroup]="codeFrom" (ngSubmit)="verify()">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">lock_outline</i>
+            <input class="validate" id="code" type="text" formControlName="code">
+            <label for="code" data-error="wrong" data-success="right">Verify code</label>
+          </div>
+        </div>
+        <div class="row" [ngClass]="{'hidden' : errorMessage == ''}">
+          <p class="error-message">{{errorMessage}}</p>
+        </div>
+        <div class="row send-again_container">
+          <app-timer *ngIf="isTimerShown" (timerFinishEvent)="closeTimer()"></app-timer>
+          <button *ngIf="!isTimerShown" (click)="sendAgain()" class="btn waves-effect waves-light col s6 send-again__button">Send again</button>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <button class="btn waves-effect waves-light col s12" [disabled]="codeFrom.invalid"
+                    [ngClass]="{'disabled' : codeFrom.invalid}">Verify</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
