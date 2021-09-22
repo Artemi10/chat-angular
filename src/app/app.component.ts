@@ -1,17 +1,15 @@
-import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MessageService} from "../services/message/message.service";
-import {Message} from "../models/message.model";
-import { LiveMessageService } from '../services/live_message/live-message.service';
+import { Component, OnDestroy } from '@angular/core';
+import { LiveMessageService } from 'src/services/live_message/live-message.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy{
   public isSearchPanelShown: boolean = false;
 
-  constructor() {}
+  constructor(private liveMessageService: LiveMessageService) {}
 
   public openSearchForm(): void{
     this.isSearchPanelShown = true;
@@ -19,4 +17,10 @@ export class AppComponent {
   public closeSearchForm(): void{
     this.isSearchPanelShown = false;
   }
+
+  ngOnDestroy(): void {
+    this.liveMessageService.closeConnection();
+  }
+
+
 }

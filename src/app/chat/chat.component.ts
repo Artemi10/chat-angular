@@ -2,9 +2,6 @@ import {AfterViewChecked, Component, ElementRef, EventEmitter, Output, ViewChild
 import {Message} from "../../models/message.model";
 import {MessageService} from "../../services/message/message.service";
 import {LiveMessageService} from "../../services/live_message/live-message.service";
-import { TokenService } from '../../services/token/token.service';
-import {Router} from "@angular/router";
-import { error } from 'console';
 import {ErrorHandlerService} from "../../services/error_handler/error-handler.service";
 
 @Component({
@@ -22,6 +19,7 @@ export class ChatComponent implements AfterViewChecked{
 
   constructor(private messageService: MessageService, private liveMessageService: LiveMessageService,
               private errorHandler: ErrorHandlerService) {
+    liveMessageService.createConnection();
     messageService.getLatestMessages()
       .subscribe((messages: Message[]) => this.messages = messages,
         error => errorHandler.handleForbidden(error))

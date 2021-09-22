@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import RSocketWebSocketClient from 'rsocket-websocket-client';
 import {
   BufferEncoders,
@@ -10,25 +10,40 @@ import {
 import {Subject} from "rxjs";
 import {Message} from "../../models/message.model";
 import {Flowable} from "rsocket-flowable";
+import { TokenService } from '../token/token.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LiveMessageService implements OnDestroy {
+export class LiveMessageService {
   // @ts-ignore
-  private client: RSocketClient = null;
-  private sendMessageSubject: Subject<object> = new Subject<object>();
-  public messageSubscribe: Subject<Message> = new Subject<Message>();
+  private rSocketClient: RSocketClient;
+  private sendMessageSubject: Subject<object>;
+  public messageSubscribe: Subject<Message>;
+  private metadata: Buffer;
 
-  constructor() {
-    this.client = LiveMessageService.createRSocketClient();
-    this.openConnection();
+  constructor(private tokenService: TokenService, private router: Router) {
+    this.sendMessageSubject = new Subject<object>();
+    this.messageSubscribe = new Subject<Message>();
+    this.metadata = encodeAndAddWellKnownMetadata(Buffer.alloc(0), MESSAGE_RSOCKET_ROUTING, Buffer.from(String.fromCharCode("api.messages.stream".length) + "api.messages.stream"));
   }
+
   // @ts-ignore
-  private static createRSocketClient(): RSocketClient{
+  public createConnection(): void{
+    const rSocket = this.createRSocketClient();
+    this.openConnection(rSocket);
+    this.rSocketClient = rSocket;
+  }
+
+  // @ts-ignore
+  private createRSocketClient(): RSocketClient{
     return new RSocketClient({
-      transport: new RSocketWebSocketClient({url: 'ws://localhost:8081/api/message/rsocket',}, BufferEncoders),
+      transport: new RSocketWebSocketClient({url: 'ws://localhost:8081/api/message/rsocket'}, BufferEncoders),
       setup: {
+        payload : {
+          data: Buffer.from(this.tokenService.getToken())
+        },
         dataMimeType: 'application/json',
         metadataMimeType: MESSAGE_RSOCKET_COMPOSITE_METADATA.string,
         keepAlive: 5000,
@@ -36,25 +51,28 @@ export class LiveMessageService implements OnDestroy {
       }
     });
   }
-  private openConnection(): void{
-    this.client.connect()
+
+  // @ts-ignore
+  private openConnection(client: RSocketClient): void{
+    client.connect()
       .then((rsocket: any) => {
-        const endpoint = "api.messages.stream";
         rsocket.requestChannel(new Flowable(source => {
           source.onSubscribe({cancel: () => {}, request: n => {}})
           this.sendMessageSubject.subscribe((message: object) => {
             source.onNext({
               data: Buffer.from(JSON.stringify(message)),
-              metadata: encodeAndAddWellKnownMetadata(Buffer.alloc(0), MESSAGE_RSOCKET_ROUTING, Buffer.from(String.fromCharCode(endpoint.length) + endpoint))
+              metadata: this.metadata
             });
-          }, error => console.log(error))
-        })).subscribe({onSubscribe: (s: any) => s.request(1000)});
-
-        rsocket.requestStream({
-          metadata: encodeAndAddWellKnownMetadata(Buffer.alloc(0), MESSAGE_RSOCKET_ROUTING, Buffer.from(String.fromCharCode(endpoint.length) + endpoint))
-        }).subscribe({
+          })
+        })).subscribe({
           onSubscribe: (s: any) => s.request(1000),
-          onNext: (e: any) => this.messageSubscribe.next(JSON.parse(e.data))
+          onError: (e: any) => this.rejectConnection()
+        });
+
+        rsocket.requestStream({metadata: this.metadata})
+          .subscribe({
+            onSubscribe: (s: any) => s.request(1000),
+            onNext: (e: any) => this.messageSubscribe.next(JSON.parse(e.data))
         });
       });
   }
@@ -63,7 +81,13 @@ export class LiveMessageService implements OnDestroy {
     this.sendMessageSubject.next(messageToSent);
   }
 
-  ngOnDestroy(): void {
-    this.client.close();
+  public closeConnection(): void{
+    this.rSocketClient.close();
+  }
+
+  private rejectConnection(): void{
+    this.rSocketClient.close();
+    this.tokenService.removeToken();
+    this.router.navigate(['/logIn']);
   }
 }
