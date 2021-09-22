@@ -32,6 +32,7 @@ export class SignUpComponent {
       }, error => {
         if (error.status === 401 || error.status === 403 || error.status === 404){
           this.errorMessage = error.error;
+          this.isPreloaderOpened = false;
         }
       });
   }

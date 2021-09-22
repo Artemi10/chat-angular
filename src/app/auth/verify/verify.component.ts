@@ -32,9 +32,9 @@ export class VerifyComponent {
         this.router.navigate(['/'])
           .then(() => this.isPreloaderOpened = false);
       }, error => {
-        if (error.status === 401 || error.status === 403
-          || error.status === 404){
+        if (error.status === 401 || error.status === 403 || error.status === 404){
           this.errorMessage = error.error;
+          this.isPreloaderOpened = false;
         }
       });
   }
