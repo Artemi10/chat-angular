@@ -12,6 +12,7 @@ import { TokenService } from '../../../services/token/token.service';
 export class LogInComponent {
   public logInForm: FormGroup = new FormGroup({});
   public errorMessage: string = '';
+  public isPreloaderOpened: boolean = false;
 
   constructor(private auth: AuthService, private tokenService: TokenService,
               private router: Router) {
@@ -25,11 +26,13 @@ export class LogInComponent {
   }
 
   public logIn(): void{
+    this.isPreloaderOpened = true;
     this.errorMessage = '';
     this.auth.logIn(this.logInForm.value)
       .subscribe(token => {
         this.tokenService.setToken(token);
-        this.router.navigate(['/verify']);
+        this.router.navigate(['/verify'])
+          .then(() => this.isPreloaderOpened = false);
       }, error => {
         if (error.status === 401 || error.status === 403 || error.status === 404){
           this.errorMessage = error.error;

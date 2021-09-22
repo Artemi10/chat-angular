@@ -10,6 +10,7 @@ import { TokenService } from '../../../services/token/token.service';
   styleUrls: ['./verify.component.css']
 })
 export class VerifyComponent {
+  public isPreloaderOpened: boolean = false;
   public errorMessage = '';
   public codeFrom: FormGroup = new FormGroup({});
   public isTimerShown: boolean = true;
@@ -20,6 +21,7 @@ export class VerifyComponent {
   }
 
   public verify(): void {
+    this.isPreloaderOpened = true;
     const codeDTO = {
       login : this.tokenService.getUserLogin(),
       code : this.codeFrom.value.code
@@ -27,7 +29,8 @@ export class VerifyComponent {
     this.auth.verifyCode(codeDTO)
       .subscribe(token => {
         this.tokenService.setToken(token);
-        this.router.navigate(['/']);
+        this.router.navigate(['/'])
+          .then(() => this.isPreloaderOpened = false);
       }, error => {
         if (error.status === 401 || error.status === 403
           || error.status === 404){

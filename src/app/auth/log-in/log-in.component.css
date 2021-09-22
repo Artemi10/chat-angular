@@ -5,6 +5,9 @@
   height: 100vh;
   background-color: #ede7f6;
 }
+.login_panel{
+  position: relative;
+}
 .login-page {
   width: 500px;
 }
@@ -27,5 +30,5 @@
   color: rgb(196, 0, 0);
 }
 .hidden{
-  display: none;
+ display: none;
 }

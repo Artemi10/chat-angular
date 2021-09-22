@@ -1,6 +1,6 @@
 <div class="verify-container">
   <div class="row verify-page">
-    <div class="col s12 z-depth-6 card-panel">
+    <div class="col s12 z-depth-6 card-panel" [ngClass]="{'hidden' : isPreloaderOpened}">
       <form class="verify-form" [formGroup]="codeFrom" (ngSubmit)="verify()">
         <div class="row">
           <div class="input-field col s12">
@@ -24,5 +24,6 @@
         </div>
       </form>
     </div>
+    <div [ngClass]="{'hidden' : !isPreloaderOpened}"><app-preloader></app-preloader></div>
   </div>
 </div>

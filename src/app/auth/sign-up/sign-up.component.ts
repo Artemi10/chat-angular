@@ -12,6 +12,7 @@ import {Router} from "@angular/router";
 export class SignUpComponent {
   public signUpForm: FormGroup = new FormGroup({});
   public errorMessage: string = '';
+  public isPreloaderOpened: boolean = false;
 
   constructor(private auth: AuthService, private router: Router,
               private tokenService: TokenService) {
@@ -22,10 +23,12 @@ export class SignUpComponent {
   }
 
   public signUp(): void{
+    this.isPreloaderOpened = true;
     this.auth.signUp(this.signUpForm.value)
       .subscribe(token => {
         this.tokenService.setToken(token);
-        this.router.navigate(['/']);
+        this.router.navigate(['/'])
+          .then(() => this.isPreloaderOpened = false);
       }, error => {
         if (error.status === 401 || error.status === 403 || error.status === 404){
           this.errorMessage = error.error;

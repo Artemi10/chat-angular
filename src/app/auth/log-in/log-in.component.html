@@ -1,6 +1,6 @@
 <div class="login-container">
   <div class="row login-page">
-    <div class="col s12 z-depth-6 card-panel">
+    <div class="col s12 z-depth-6 card-panel login_panel" [ngClass]="{'hidden' : isPreloaderOpened}">
       <form [formGroup]="logInForm" (ngSubmit)="logIn()" class="login-form">
         <div class="row">
         </div>
@@ -36,5 +36,6 @@
         </div>
       </form>
     </div>
+    <div [ngClass]="{'hidden' : !isPreloaderOpened}" class="preloader"><app-preloader></app-preloader></div>
   </div>
 </div>
