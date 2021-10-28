@@ -21,7 +21,10 @@ export class ChatComponent implements AfterViewChecked{
               private errorHandler: ErrorHandlerService) {
     liveMessageService.createConnection();
     messageService.getLatestMessages()
-      .subscribe((messages: Message[]) => this.messages = messages,
+      .subscribe((messages: Message[]) => {
+          this.messages = messages;
+          this.isFinalMessages = messages.length < 10;
+        },
         error => errorHandler.handleForbidden(error))
     liveMessageService.messageSubscribe
       .subscribe((message: Message) => this.messages.push(message))
