@@ -1,0 +1,18 @@
+<form class="pop-up__form" [formGroup]="updateChatForm" (ngSubmit)="updateChat()">
+  <span class="pop-up__form__tittle">Update Chat</span>
+  <app-chat-name-input formGroupName="chatNameInput" [isActive]="true"></app-chat-name-input>
+  <div class="pop-up__form__users">
+    <app-selected-user
+      [login]="login"
+      *ngFor="let login of selectedUserLogins"
+      (deleteUserListener)="deleteSelectedUser(login)">
+    </app-selected-user>
+  </div>
+  <app-error-message
+    [errorMessage]="errorMessage">
+  </app-error-message>
+  <app-submit-button class="pop-up__form__button"
+                     [isFormDisabled]="updateChatForm.invalid"
+                     [name]="'Update'">
+  </app-submit-button>
+</form>

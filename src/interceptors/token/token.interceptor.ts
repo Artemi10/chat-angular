@@ -18,7 +18,7 @@ export class TokenInterceptor implements HttpInterceptor {
     if (request.url !== `${environment.api}/auth/logIn` && request.url !== `${environment.api}/auth/signUp`){
       const token = this.tokenService.getToken()
       if (token !== ''){
-        const clonedRequest = request.clone({headers: request.headers.set('Authorization', `Bearer_${token}`)});
+        const clonedRequest = request.clone({headers: request.headers.append('Authorization', `Bearer_${token}`)});
         return next.handle(clonedRequest);
       }
     }

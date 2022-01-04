@@ -1,0 +1,6 @@
+<div class="user-container" (mouseenter)="mouseEnterListener()" (mouseleave)="mouseLeaveListener()">
+  <span class="person__container"><i class="material-icons prefix">person</i></span>
+  <p class="login__container">{{login}}</p>
+  <span class="delete__container" [ngClass]="{'invisible' : !isHovered}"
+        (click)="clickDeleteIconListener()"><i class="material-icons prefix">delete</i></span>
+</div>

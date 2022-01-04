@@ -1,0 +1,70 @@
+.user-account__container{
+  position: fixed;
+  top: 0;
+  right: -400px;
+  height: 100vh;
+  width: 400px;
+  background-color: #d1c4e9;
+  transition: right 0.4s ease;
+  display: flex;
+  flex-direction: column;
+}
+.user-account__info{
+  height: 40%;
+}
+.user-account__nav{
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+}
+.user-account__nav__chats{
+  height: 100%;
+}
+.user-account__container__close-btn{
+  position: relative;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+}
+.user-account__container__close-btn i{
+  color: #ffffff;
+}
+.user-account__container_opened{
+  right: 0;
+}
+.user-account__container_closed{
+  right: -400px;
+}
+.user-account__image__container{
+  display: flex;
+  justify-content: center;
+}
+
+.user-account__image__container{
+  margin: 20px;
+}
+.user-account__image__container img{
+  background-color: #ffffff;
+  width: 128px;
+  height: 128px;
+}
+.user-account__name{
+  padding: 0;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-size: 25px;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 5px;
+}
+.user-account__birthdate{
+  margin-top: 0;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+}
+

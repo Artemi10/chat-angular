@@ -6,7 +6,7 @@ import { LiveMessageService } from 'src/services/live_message/live-message.servi
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnDestroy{
+export class AppComponent{
   public isSearchPanelShown: boolean = false;
 
   constructor(private liveMessageService: LiveMessageService) {}
@@ -18,9 +18,6 @@ export class AppComponent implements OnDestroy{
     this.isSearchPanelShown = false;
   }
 
-  ngOnDestroy(): void {
-    this.liveMessageService.closeConnection();
-  }
 
 
 }

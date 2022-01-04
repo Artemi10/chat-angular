@@ -1,0 +1,14 @@
+<div class="pop-up__overlay">
+  <div class="pop-up__container">
+    <i class="material-icons pop-up__container__button" (click)="closePopUp()">clear</i>
+    <app-search-panel class="pop-up__search-panel"
+                      (selectUserEvent)="selectUser($event)"
+                      [selectedUserLogins]="selectedUserLogins">
+    </app-search-panel>
+    <app-update-chat-form class="pop-up__update-chat-form"
+                          [selectedUserLogins]="selectedUserLogins"
+                          [chatName]="chatName!">
+    </app-update-chat-form>
+  </div>
+</div>
+

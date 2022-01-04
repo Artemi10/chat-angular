@@ -1,0 +1,35 @@
+.collection{
+  margin: 0;
+  height: 100%;
+}
+.collection_closed{
+  border-bottom: none;
+}
+.collection-item{
+  cursor: pointer;
+  background-color: #d1c4e9;
+  color: #ffffff;
+  font-weight: bold;
+}
+.collection-item:hover{
+  background-color: #BCB0CF;
+}
+.chats{
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+.chats__tittle{
+  font-size: 20px;
+}
+.chats__content{
+  height: calc(100% - 45px);
+  overflow: auto;
+}
+.chats__btn_opened{
+  transform: rotate(180deg);
+}
+.chats__content_hidden{
+  display: none;
+}
+

@@ -8,23 +8,8 @@
 .verify-page {
   width: 500px;
 }
-.ref_container{
-  display: flex;
-  justify-content: center;
-}
-.ref{
-  font-size: 20px;
-  color: #9575cd;
-}
-.ref:hover{
-  color: #d1c4e9;
-}
-.invalid{
-  border-bottom: 1px solid rgb(196, 0, 0);
-}
-.error-message{
-  text-align: center;
-  color: rgb(196, 0, 0);
+.verify-form{
+  padding-bottom: 20px;
 }
 .hidden{
   display: none;

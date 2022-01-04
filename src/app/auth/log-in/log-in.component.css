@@ -9,26 +9,9 @@
   position: relative;
 }
 .login-page {
+  padding-top: 10px;
   width: 500px;
 }
-.sign-up_container{
-  display: flex;
-  justify-content: center;
-}
-.sign-up{
-  font-size: 20px;
-  color: #9575cd;
-}
-.sign-up:hover{
-  color: #d1c4e9;
-}
-.invalid{
-  border-bottom: 1px solid rgb(196, 0, 0);
-}
-.error-message{
-  text-align: center;
-  color: rgb(196, 0, 0);
-}
 .hidden{
- display: none;
+  display: none;
 }

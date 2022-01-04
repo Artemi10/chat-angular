@@ -1,0 +1,23 @@
+.user-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid #939393;
+  padding: 15px;
+  margin-bottom: 15px;
+  text-align: left;
+  font-size: 18px;
+}
+.login__container{
+  padding: 0;
+  margin: 0;
+  color: #939393;
+}
+.delete__container{
+  cursor: pointer;
+  color: rgb(196, 0, 0);
+}
+.invisible{
+  visibility: hidden;
+}

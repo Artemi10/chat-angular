@@ -1,0 +1,8 @@
+<div class="row">
+  <div class="input-field col s12" [formGroup]="birthDateFormGroup!">
+    <i class="material-icons prefix">date_range</i>
+    <input class="validate datepicker" id="birthDate" type="text" formControlName="birthDate" #datepicker
+           [ngClass]="{'invalid' : isInputInvalid}">
+    <label for="birthDate" data-error="wrong" data-success="right">Birthdate</label>
+  </div>
+</div>

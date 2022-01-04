@@ -1,0 +1,12 @@
+<div class="user-container"
+     (mouseenter)="mouseEnterListener()" (mouseleave)="mouseLeaveListener()">
+  <span class="person__container"><i class="material-icons prefix">person</i></span>
+  <p class="login__container">{{user!.login}}</p>
+  <span class="select__container" [ngClass]="{'invisible' : isSelectedIconInvisible, 'hidden' : isSelectedIconHidden}">
+    <i class="material-icons prefix">done</i>
+  </span>
+  <span class="add__container" [ngClass]="{'hidden' : isAddIconHidden}" (click)="clickAddIconListener()">
+    <i class="material-icons prefix">add</i>
+  </span>
+</div>
+

@@ -1,56 +1,17 @@
 <div class="sign-up-container">
   <div class="row sign-up-page">
     <div class="col s12 z-depth-6 card-panel" [ngClass]="{'hidden' : isPreloaderOpened}">
-      <form class="login-form" [formGroup]="signUpForm" (ngSubmit)="signUp()">
-        <div class="row">
-          <div class="input-field col s12">
-            <i class="material-icons prefix">account_circle</i>
-            <input class="validate" id="login" type="text" formControlName="login"
-                   [ngClass]="{'invalid' : checkInput('login')}">
-            <label for="login" data-error="wrong" data-success="right">Login</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <i class="material-icons prefix">mail_outline</i>
-            <input class="validate" id="email" type="email" formControlName="email"
-                   [ngClass]="{'invalid' : checkInput('email')}">
-            <label for="email" data-error="wrong" data-success="right">Email</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <i class="material-icons prefix">lock_outline</i>
-            <input id="password" type="password" formControlName="password"
-                   [ngClass]="{'invalid' : checkInput('password')}">
-            <label for="password">Password</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <i class="material-icons prefix">repeat</i>
-            <input id="rePassword" type="password" formControlName="rePassword"
-                   [ngClass]="{'invalid' : checkInput('rePassword')}">
-            <label for="rePassword">Repeat password</label>
-          </div>
-        </div>
-        <div class="row" [ngClass]="{'hidden' : errorMessage == ''}">
-          <p class="error-message">{{errorMessage}}</p>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <button class="btn waves-effect waves-light col s12" type="submit" [disabled]="signUpForm.invalid"
-                    [ngClass]="{'disabled' : signUpForm.invalid}">Sign Up</button>
-          </div>
-        </div>
-        <div class="row log-in_container">
-          <div class="input-field col">
-            <p class="margin medium-small"><a routerLink="/logIn" class="log-in">Log In</a></p>
-          </div>
-        </div>
+      <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
+        <app-login-input formGroupName="loginInput"></app-login-input>
+        <app-email-input formGroupName="emailInput"></app-email-input>
+        <app-birth-date-input formGroupName="birthDateInput"></app-birth-date-input>
+        <app-password-input formGroupName="passwordInput"></app-password-input>
+        <app-repassword-input formGroupName="repasswordInput"></app-repassword-input>
+        <app-error-message [errorMessage]="errorMessage"></app-error-message>
+        <app-submit-button [name]="'Sign Up'" [isFormDisabled]="signUpForm.invalid"></app-submit-button>
+        <app-ref-link [name]="'Log In'" [refLink]="'/logIn'"></app-ref-link>
       </form>
     </div>
     <div [ngClass]="{'hidden' : !isPreloaderOpened}"><app-preloader></app-preloader></div>
   </div>
 </div>
-

@@ -1,0 +1,8 @@
+<div class="row">
+  <div class="input-field col s12" [formGroup]="loginFormGroup!">
+    <i class="material-icons prefix">account_circle</i>
+    <input class="validate" id="login" type="text" [formControlName]="'login'"
+           [ngClass]="{'invalid' : isInputInvalid}">
+    <label for="login" data-error="wrong" data-success="right">LogIn</label>
+  </div>
+</div>

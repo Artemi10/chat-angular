@@ -1,0 +1,19 @@
+<div class="chat">
+  <div class="chat__header">
+    <app-header (openPopUpEvent)="openPopUp($event)"></app-header>
+  </div>
+  <div *ngIf="isChatChosen" #scrolling infiniteScroll
+       [infiniteScrollUpDistance]="1"
+       [scrollWindow]="false"
+       [infiniteScrollThrottle]="100"
+       [alwaysCallback]="true"
+       (scrolledUp)="scrolledEventListener()"
+       class="chat__messages search-results">
+    <app-preloader [ngClass]="{'hidden' : isFinalMessages}"></app-preloader>
+    <app-messages [messages]="messages"></app-messages>
+  </div>
+  <div *ngIf="isChatChosen" class="chat__input-messages">
+    <app-input-message [chatId]="chat?.id!"></app-input-message>
+  </div>
+  <div class="chat_non-selected" [ngClass]="{'hidden' : isChatChosen}"></div>
+</div>

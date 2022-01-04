@@ -1,0 +1,8 @@
+<div class="row">
+  <div class="input-field col s12" [formGroup]="emailFormGroup!">
+    <i class="material-icons prefix">mail_outline</i>
+    <input class="validate" id="email" type="email" formControlName="email"
+           [ngClass]="{'invalid' : isInputInvalid}">
+    <label for="email" data-error="wrong" data-success="right">Email</label>
+  </div>
+</div>

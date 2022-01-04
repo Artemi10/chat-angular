@@ -1,0 +1,6 @@
+<div class="pop-up__form__panel input-field" [formGroup]="chatNameFormGroup!">
+  <i class="material-icons prefix">people</i>
+  <input class="validate" id="chat_name" type="text" formControlName="chatName"
+         [ngClass]="{'invalid' : isInputInvalid}">
+  <label for="chat_name" data-error="wrong" data-success="right" [ngClass]="{'active' : isActive}">Chat name</label>
+</div>

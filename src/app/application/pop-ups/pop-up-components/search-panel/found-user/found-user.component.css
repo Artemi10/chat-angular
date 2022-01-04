@@ -1,0 +1,27 @@
+.user-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid #939393;
+  padding: 15px;
+  margin-bottom: 15px;
+  text-align: left;
+  font-size: 18px;
+}
+.login__container{
+  padding: 0;
+  margin: 0;
+}
+.select__container{
+  color: #4caf50;
+}
+.add__container{
+  cursor: pointer;
+}
+.invisible{
+  visibility: hidden;
+}
+.hidden{
+  display: none;
+}

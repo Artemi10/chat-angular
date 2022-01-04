@@ -1,11 +1,13 @@
 export class Message {
-  public id: string;
-  public login: string;
-  public content: string;
+  public readonly id?: string;
+  public readonly login: string;
+  public readonly content: string;
+  public readonly chatId: number;
 
-  constructor(id: string, login: string, content: string) {
-    this.id = id;
+  constructor(login: string, content: string, chatId: number, id?: string) {
     this.login = login;
     this.content = content;
+    this.chatId = chatId;
+    this.id = id;
   }
 }

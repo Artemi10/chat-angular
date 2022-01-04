@@ -1,0 +1,8 @@
+<div class="row">
+  <div class="input-field col s12" [formGroup]="codeFormGroup!">
+    <i class="material-icons prefix">lock_outline</i>
+    <input class="validate" id="code" type="text" formControlName="code"
+           [ngClass]="{'invalid' : isInputInvalid}">
+    <label for="code" data-error="wrong" data-success="right">Verify code</label>
+  </div>
+</div>

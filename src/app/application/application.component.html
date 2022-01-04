@@ -1,0 +1,15 @@
+<app-create-chat-pop-up
+  *ngIf="isCreateChatPopUpOpened"
+  (closePopUpEvent)="closePopUpListener($event)">
+</app-create-chat-pop-up>
+<app-update-chat-pop-up
+  *ngIf="isUpdateChatPopUpOpened"
+  (closePopUpEvent)="closePopUpListener($event)">
+</app-update-chat-pop-up>
+<app-chat
+  (openPopUpEvent)="openPopUpListener($event)">
+</app-chat>
+<app-user-account
+  [isUserAccountOpened]="isUserAccountOpened"
+  (closeUserAccountEvent)="closePopUpListener($event)">
+</app-user-account>

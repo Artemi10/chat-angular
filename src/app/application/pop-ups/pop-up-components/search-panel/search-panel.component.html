@@ -1,0 +1,26 @@
+<div class="pop-up__search">
+  <span class="pop-up__search__tittle">Add users</span>
+  <div class="pop-up__search__panel input-field">
+    <i class="material-icons prefix">search</i>
+    <input class="validate" id="login" type="text"
+           [(ngModel)]="name"
+           (ngModelChange)="updateUsersList()">
+    <label for="login" data-error="wrong" data-success="right">Login</label>
+  </div>
+  <div class="pop-up__search__result" infiniteScroll
+       [infiniteScrollUpDistance]="1"
+       [scrollWindow]="false"
+       [infiniteScrollThrottle]="100"
+       [alwaysCallback]="true"
+       (scrolled)="scrolledEventListener()"
+       [class.justifyContent]="isUsersEmpty ? 'center' : 'start'">
+    <img src="../../../../../assets/icons/add-user.png" alt="" [ngClass]="{'hidden' : !isUsersEmpty}">
+    <app-found-user
+      [ngClass]="{'hidden' : isUsersEmpty}"
+      *ngFor="let user of users"
+      [user]="user"
+      [isSelected]="isUserSelected(user.login)"
+      (selectUserListener)="selectUser($event)">
+    </app-found-user>
+  </div>
+</div>

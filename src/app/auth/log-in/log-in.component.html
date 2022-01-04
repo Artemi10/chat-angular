@@ -2,40 +2,15 @@
   <div class="row login-page">
     <div class="col s12 z-depth-6 card-panel login_panel" [ngClass]="{'hidden' : isPreloaderOpened}">
       <form [formGroup]="logInForm" (ngSubmit)="logIn()" class="login-form">
-        <div class="row">
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <i class="material-icons prefix">account_circle</i>
-            <input class="validate" id="login" type="text" formControlName="login"
-                   [ngClass]="{'invalid' : checkInput('login')}">
-            <label for="login" data-error="wrong" data-success="right">LogIn</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <i class="material-icons prefix">lock_outline</i>
-            <input id="password" type="password" formControlName="password"
-                   [ngClass]="{'invalid' : checkInput('password')}">
-            <label for="password">Password</label>
-          </div>
-        </div>
-        <div class="row" [ngClass]="{'hidden' : errorMessage == ''}">
-          <p class="error-message">{{errorMessage}}</p>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <button class="btn waves-effect waves-light col s12" [disabled]="logInForm.invalid"
-                    [ngClass]="{'disabled' : logInForm.invalid}">Log In</button>
-          </div>
-        </div>
-        <div class="row sign-up_container">
-          <div class="input-field col">
-            <p class="margin medium-small"><a routerLink="/signUp" class="sign-up">Sign Up</a></p>
-          </div>
-        </div>
+        <app-login-input formGroupName="loginInput"></app-login-input>
+        <app-password-input formGroupName="passwordInput"></app-password-input>
+        <app-error-message [errorMessage]="errorMessage"></app-error-message>
+        <app-submit-button [name]="'Log In'" [isFormDisabled]="logInForm.invalid"></app-submit-button>
+        <app-ref-link [name]="'Sign Up'" [refLink]="'/signUp'"></app-ref-link>
       </form>
     </div>
-    <div [ngClass]="{'hidden' : !isPreloaderOpened}" class="preloader"><app-preloader></app-preloader></div>
+    <div [ngClass]="{'hidden' : !isPreloaderOpened}" class="preloader">
+      <app-preloader></app-preloader>
+    </div>
   </div>
 </div>

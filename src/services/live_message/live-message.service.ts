@@ -26,23 +26,21 @@ export class LiveMessageService {
   constructor(private tokenService: TokenService, private router: Router) {
     this.sendMessageSubject = new Subject<object>();
     this.messageSubscribe = new Subject<Message>();
-    this.metadata = encodeAndAddWellKnownMetadata(Buffer.alloc(0), MESSAGE_RSOCKET_ROUTING, Buffer.from(String.fromCharCode("api.messages.stream".length) + "api.messages.stream"));
-  }
-
-  // @ts-ignore
-  public createConnection(): void{
-    const rSocket = this.createRSocketClient();
-    this.openConnection(rSocket);
-    this.rSocketClient = rSocket;
+    this.metadata = encodeAndAddWellKnownMetadata(
+      Buffer.alloc(0), MESSAGE_RSOCKET_ROUTING,
+      Buffer.from(String.fromCharCode("api.messages.stream".length) + "api.messages.stream"));
+    this.rSocketClient = this.createRSocketClient();
+    this.openConnection();
   }
 
   // @ts-ignore
   private createRSocketClient(): RSocketClient{
+    const payloadData = { token: this.tokenService.getToken() };
     return new RSocketClient({
       transport: new RSocketWebSocketClient({url: 'ws://localhost:8081/api/message/rsocket'}, BufferEncoders),
       setup: {
         payload : {
-          data: Buffer.from(this.tokenService.getToken())
+          data: Buffer.from(JSON.stringify(payloadData))
         },
         dataMimeType: 'application/json',
         metadataMimeType: MESSAGE_RSOCKET_COMPOSITE_METADATA.string,
@@ -53,10 +51,10 @@ export class LiveMessageService {
   }
 
   // @ts-ignore
-  private openConnection(client: RSocketClient): void{
-    client.connect()
-      .then((rsocket: any) => {
-        rsocket.requestChannel(new Flowable(source => {
+  private openConnection() {
+    this.rSocketClient.connect()
+      .then((socket: any) => {
+        socket.requestChannel(new Flowable(source => {
           source.onSubscribe({cancel: () => {}, request: n => {}})
           this.sendMessageSubject.subscribe((message: object) => {
             source.onNext({
@@ -65,11 +63,11 @@ export class LiveMessageService {
             });
           })
         })).subscribe({
-          onSubscribe: (s: any) => s.request(1000),
-          onError: (e: any) => this.rejectConnection()
+          onSubscribe: (s: any) => s.request(1000)
         });
 
-        rsocket.requestStream({metadata: this.metadata})
+        const payloadData = { token: this.tokenService.getToken() };
+        socket.requestStream({data: Buffer.from(JSON.stringify(payloadData)), metadata: this.metadata})
           .subscribe({
             onSubscribe: (s: any) => s.request(1000),
             onNext: (e: any) => this.messageSubscribe.next(JSON.parse(e.data))
@@ -77,16 +75,22 @@ export class LiveMessageService {
       });
   }
 
-  public sendMessage(messageToSent: object): void{
-    this.sendMessageSubject.next(messageToSent);
+  public sendMessage(messageContent: string, chatId: number) {
+    const token = this.tokenService.getToken();
+    const login = this.tokenService.getUserLogin();
+    const data = {
+      message : new Message(login, messageContent, chatId), token
+    };
+    this.sendMessageSubject.next(data);
   }
 
-  public closeConnection(): void{
+  public refreshConnection() {
     this.rSocketClient.close();
+    this.rSocketClient = this.createRSocketClient();
+    this.openConnection();
   }
 
-  private rejectConnection(): void{
-    this.rSocketClient.close();
+  public rejectConnection() {
     this.tokenService.removeToken();
     this.router.navigate(['/logIn']);
   }

@@ -11,6 +11,16 @@ export class TokenService {
     this.tokenHeader = 'jwt'
   }
 
+  public getTokenHeader(): string{
+    const token = this.getToken();
+    const login = this.getUserLogin();
+    return '<wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\">\n' +
+      '<wsse:UsernameToken>' +
+      `   <wsse:Username>${login}</wsse:Username>` +
+      `   <wsse:Password>${token}</wsse:Password>` +
+      '</wsse:UsernameToken></wsse:Security>';
+  }
+
   public getToken(): string{
     const jwt = localStorage.getItem(this.tokenHeader)
     if (jwt === null) return ''
@@ -55,7 +65,7 @@ export class TokenService {
     return date;
   }
 
-  public getUserLogin(): String{
+  public getUserLogin(): string{
     const decodedToken = jwt_decode(this.getToken());
     // @ts-ignore
     return decodedToken.sub;

@@ -1,0 +1,14 @@
+<div class="user-account__container"
+  [ngClass]="isUserAccountOpened ? 'user-account__container_opened' : 'user-account__container_closed'">
+  <div class="user-account__info">
+    <span class="user-account__container__close-btn" (click)="closeUserAccount()"><i class="material-icons small">close</i></span>
+    <div class="user-account__image__container">
+      <img src="../../../assets/icons/user.png" alt="" class="circle">
+    </div>
+    <p class="user-account__name">{{user?.login!}}</p>
+    <p class="user-account__birthdate">{{user?.birthDate! | date}}</p>
+  </div>
+  <div class="user-account__nav">
+    <app-chats-nav class="user-account__nav__chats"></app-chats-nav>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<nav class="deep-purple lighten-3">
+  <div class="header nav-wrapper">
+    <span class="brand-logo left header__logo">devanmejia</span>
+    <span class="brand-logo center hide-on-med-and-down" [ngClass]="{'hidden' : !isChatChosen}">{{chatName!}}</span>
+    <ul class="header__nav right">
+      <li [ngClass]="{'hidden' : !isChatChosen}" (click)="clickOpenUpdateChatPopupListener()"><a><i class="material-icons">edit</i></a></li>
+      <li><a (click)="clickOpenCreateChatPopupListener()"><i class="material-icons">add</i></a></li>
+      <li [ngClass]="{'hidden' : !isChatChosen}"><a (click)="clickSearchButtonListener()"><i class="material-icons">search</i></a></li>
+      <li><a href=""><i class="material-icons">refresh</i></a></li>
+      <li><a (click)="logOut()"><i class="material-icons">exit_to_app</i></a></li>
+      <li><a (click)="clickOpenAccountButtonListener()"><i class="material-icons">more_vert</i></a></li>
+    </ul>
+  </div>
+</nav>

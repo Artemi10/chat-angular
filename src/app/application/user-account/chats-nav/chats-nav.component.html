@@ -1,0 +1,17 @@
+<div class="collection" [ngClass]="{'collection_closed' : !isChatCollectionOpened}">
+  <div class="collection-item chats" (click)="clickOpenListener()">
+    <span class="chats__tittle">Chats</span>
+    <i class="material-icons chats__btn" [ngClass]="{'chats__btn_opened' : isChatCollectionOpened}">keyboard_arrow_down</i>
+  </div>
+  <div class="chats__content"
+       [ngClass]="{'chats__content_hidden' : !isChatCollectionOpened}"
+       infiniteScroll
+       [infiniteScrollUpDistance]="1"
+       [scrollWindow]="false"
+       [infiniteScrollThrottle]="100"
+       [alwaysCallback]="true"
+       (scrolled)="scrolledEventListener()">
+    <p class="collection-item" (click)="choseChatListener(chat)"
+       *ngFor="let chat of chats">{{chat.name}}</p>
+  </div>
+</div>

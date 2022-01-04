@@ -6,25 +6,8 @@
   background-color: #ede7f6;
 }
 .sign-up-page {
+  padding-top: 10px;
   width: 500px;
-}
-.log-in_container{
-  display: flex;
-  justify-content: center;
-}
-.log-in{
-  font-size: 20px;
-  color: #9575cd;
-}
-.log-in:hover{
-  color: #d1c4e9;
-}
-.invalid{
-  border-bottom: 1px solid rgb(196, 0, 0);
-}
-.error-message{
-  text-align: center;
-  color: rgb(196, 0, 0);
 }
 .hidden{
   display: none;

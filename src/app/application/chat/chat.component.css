@@ -1,0 +1,20 @@
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.chat__messages {
+  flex-grow: 2;
+  overflow: auto;
+}
+.chat_non-selected{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-image: url(../../../assets/icons/chat-icon.png);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.hidden{
+  display: none;
+}
