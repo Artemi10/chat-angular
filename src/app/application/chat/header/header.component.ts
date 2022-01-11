@@ -26,6 +26,11 @@ export class HeaderComponent {
     return this.chat != null;
   }
 
+  get isAdmin(): boolean{
+    return this.chat != null
+      && this.chat.admin.login === this.tokenService.getUserLogin()
+  }
+
   get chatName(): string | undefined{
     return this.chat?.name;
   }
@@ -47,6 +52,7 @@ export class HeaderComponent {
   }
 
   public logOut(): void{
+    this.chatService.currentChat = undefined;
     this.tokenService.removeToken();
     this.router.navigate(['/logIn']);
   }

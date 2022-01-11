@@ -2,12 +2,11 @@
   <div class="pop-up__container">
     <i class="material-icons pop-up__container__button" (click)="closePopUp()">clear</i>
     <app-search-panel class="pop-up__search-panel"
-      (selectUserEvent)="selectUser($event)"
-      [selectedUserLogins]="selectedUserLogins">
+                      [usersToUpdate]="usersToUpdate">
     </app-search-panel>
     <app-create-chat-form class="pop-up__create-chat-form"
-      [selectedUserLogins]="selectedUserLogins"
-      (closePopUpEvent)="closePopUp()">
+                          [usersToUpdate]="usersToUpdate"
+                          (closePopUpEvent)="closePopUp()">
     </app-create-chat-form>
   </div>
 </div>

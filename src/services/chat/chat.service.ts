@@ -11,14 +11,39 @@ import {map} from "rxjs/operators";
   providedIn: 'root'
 })
 export class ChatService {
-  public currentChat: Chat | undefined;
-  public newChatCreatedEvent: Subject<Chat>;
-  public currentChatChangedEvent: Subject<Chat>;
+  private _currentChat: Chat | undefined;
+  private _currentChatChangedEvent: Subject<Chat>;
+  private _newChatCreatedEvent: Subject<Chat>;
+  private _chatUpdatedEvent: Subject<Chat>;
 
   constructor(private http: HttpClient, private tokenService: TokenService,
               private chatConverter: XmlChatConverter) {
-    this.newChatCreatedEvent = new Subject<Chat>();
-    this.currentChatChangedEvent = new Subject<Chat>();
+    this._newChatCreatedEvent = new Subject<Chat>();
+    this._currentChatChangedEvent = new Subject<Chat>();
+    this._chatUpdatedEvent = new Subject<Chat>();
+  }
+
+  public set currentChat(newChat: Chat | undefined){
+    if (newChat !== undefined){
+      this._currentChat = newChat;
+      this._currentChatChangedEvent.next(newChat);
+    }
+  }
+
+  public get currentChat(): Chat | undefined{
+    return this._currentChat;
+  }
+
+  public get chatUpdatedEvent(): Observable<Chat>{
+    return this._chatUpdatedEvent.asObservable();
+  }
+
+  public get newChatCreatedEvent(): Observable<Chat>{
+    return this._newChatCreatedEvent.asObservable();
+  }
+
+  public get currentChatChangedEvent(): Observable<Chat>{
+    return this._currentChatChangedEvent.asObservable();
   }
 
   public getChatByName(name: String): Observable<Chat>{
@@ -56,7 +81,7 @@ export class ChatService {
       .pipe(map(resp => this.chatConverter.convertList(resp, 'ns2:chats')));
   }
 
-  public createChat(chatName: string, userNames: string[]): Observable<Chat>{
+  public createChat(chatName: string, userNames: string[]): Observable<void>{
     const header = this.tokenService.getTokenHeader();
     const userNamesXML = userNames
       .map(name => `<gs:userNames>${name}</gs:userNames>`)
@@ -75,45 +100,12 @@ export class ChatService {
     return this.http.post(`${environment.api}/account`, body,
       {headers: {'Content-Type': 'text/xml'}, responseType : 'text'})
       .pipe(
-        map(resp => this.chatConverter.convert(resp, 'ns2:chat'))
+        map(resp => this.chatConverter.convert(resp, 'ns2:chat')),
+        map(chat => this._newChatCreatedEvent.next(chat))
       );
   }
 
-  public deleteUserFromChat(chatName: string, userName: string): Observable<string>{
-    const header = this.tokenService.getTokenHeader();
-    const body =
-      '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" ' +
-      'xmlns:gs="http://spring.io/guides/gs-producing-web-service">' +
-      `   <soapenv:Header>${header}</soapenv:Header>` +
-      '   <soapenv:Body>' +
-      '      <gs:deleteUserFromChatRequest>' +
-      `         <gs:chatName>${chatName}</gs:chatName>` +
-      `         <gs:userName>${userName}</gs:userName>` +
-      '      </gs:deleteUserFromChatRequest>' +
-      '   </soapenv:Body>' +
-      '</soapenv:Envelope>';
-    return this.http.post(`${environment.api}/account`, body,
-      {headers: {'Content-Type': 'text/xml'}, responseType : 'text' });
-  }
-
-  public addUserToChat(chatName: string, userName: string): Observable<string>{
-    const header = this.tokenService.getTokenHeader();
-    const body =
-      '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" ' +
-      'xmlns:gs="http://spring.io/guides/gs-producing-web-service">' +
-      `   <soapenv:Header>${header}</soapenv:Header>` +
-      '   <soapenv:Body>' +
-      '      <gs:addUserToChatRequest>' +
-      `         <gs:chatName>${chatName}</gs:chatName>` +
-      `         <gs:userName>${userName}</gs:userName>` +
-      '      </gs:addUserToChatRequest>' +
-      '   </soapenv:Body>' +
-      '</soapenv:Envelope>';
-    return this.http.post(`${environment.api}/account`, body,
-      {headers: {'Content-Type': 'text/xml'}, responseType : 'text' });
-  }
-
-  public updateChatName(id: number, newName: string): Observable<string>{
+  public updateChatName(id: number, newName: string): Observable<void>{
     const header = this.tokenService.getTokenHeader();
     const body =
       '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" ' +
@@ -127,16 +119,46 @@ export class ChatService {
       '   </soapenv:Body>' +
       '</soapenv:Envelope>';
     return this.http.post(`${environment.api}/account`, body,
-      {headers: {'Content-Type': 'text/xml'}, responseType : 'text' });
+      {headers: {'Content-Type': 'text/xml'}, responseType : 'text' })
+      .pipe(
+        map(resp => this.chatConverter.convert(resp, 'ns2:chat')),
+        map(chat => this._chatUpdatedEvent.next(chat))
+      );
   }
 
-  public newChatCreated(newChat: Chat){
-    this.newChatCreatedEvent.next(newChat);
+  public updateChat(requestBody: ChatToUpdate): Observable<void>{
+    const header = this.tokenService.getTokenHeader();
+    const userLoginsToAddBody = requestBody.userLoginsToAdd
+      .map(login => `<gs:userLoginsToAdd>${login}</gs:userLoginsToAdd>`).join('')
+    const userLoginsToDeleteBody = requestBody.userLoginsToDelete
+      .map(login => `<gs:userLoginsToDelete>${login}</gs:userLoginsToDelete>`).join('')
+    const body =
+      '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" ' +
+      'xmlns:gs="http://spring.io/guides/gs-producing-web-service">' +
+      `   <soapenv:Header>${header}</soapenv:Header>` +
+      '   <soapenv:Body>' +
+      '      <gs:updateChatRequest>' +
+      `         <gs:chatId>${requestBody.chatId}</gs:chatId>` +
+      `         <gs:newChatName>${requestBody.chatName}</gs:newChatName>` +
+                  userLoginsToAddBody + userLoginsToDeleteBody +
+      '      </gs:updateChatRequest>\n' +
+      '   </soapenv:Body>' +
+      '</soapenv:Envelope>';
+    return this.http.post(`${environment.api}/account`, body,
+      {headers: {'Content-Type': 'text/xml'}, responseType : 'text' })
+      .pipe(
+        map(resp => this.chatConverter.convert(resp, 'ns2:chat')),
+        map(chat => {
+          this._chatUpdatedEvent.next(chat);
+          this.currentChat = chat;
+        })
+      );
   }
+}
 
-  public changeCurrentChat(newChat: Chat){
-    this.currentChat = newChat;
-    this.currentChatChangedEvent.next(newChat);
-  }
-
+export interface ChatToUpdate{
+  chatId: number,
+  chatName: string,
+  userLoginsToAdd: string[],
+  userLoginsToDelete: string[]
 }

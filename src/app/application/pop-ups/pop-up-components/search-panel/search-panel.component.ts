@@ -1,8 +1,8 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import { User } from 'src/models/user.model';
 import { ErrorHandlerService } from 'src/services/error_handler/error-handler.service';
-import {Chat} from "../../../../../models/chat.model";
 import {UserService} from "../../../../../services/user/user.service";
+import {UsersToUpdate} from "../../users-to-update";
 
 @Component({
   selector: 'app-search-panel',
@@ -15,8 +15,7 @@ export class SearchPanelComponent {
   private pageNumber: number;
   private isScrolledDown: boolean;
   private readonly pageSize: number;
-  @Input() selectedUserLogins: Set<string> | undefined;
-  @Output() selectUserEvent: EventEmitter<string>;
+  @Input() usersToUpdate: UsersToUpdate | undefined;
 
   constructor(private userService: UserService, private errorHandler: ErrorHandlerService) {
     this.users = [];
@@ -24,7 +23,6 @@ export class SearchPanelComponent {
     this.pageNumber = 0;
     this.pageSize = 10;
     this.isScrolledDown = false;
-    this.selectUserEvent = new EventEmitter<string>();
   }
 
   public get isUsersEmpty(): boolean {
@@ -40,14 +38,16 @@ export class SearchPanelComponent {
   }
 
   public isUserSelected(login: string): boolean{
-    if (this.selectedUserLogins !== undefined){
-      return this.selectedUserLogins.has(login);
+    if (this.usersToUpdate !== undefined){
+      return this.usersToUpdate.has(login);
     }
     return false;
   }
 
   public selectUser(login: string) {
-    this.selectUserEvent.emit(login);
+    if (this.usersToUpdate !== undefined){
+      this.usersToUpdate.add(login);
+    }
   }
 
   public scrolledEventListener(){

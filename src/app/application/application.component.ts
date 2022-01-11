@@ -25,6 +25,7 @@ export class ApplicationComponent {
     return this.popUps.isOpened(PopUpType.CREATE_CHAT);
   }
 
+  //TODO
   public get isSearchMessageOpened(): boolean {
     return this.popUps.isOpened(PopUpType.SEARCH_MESSAGE);
   }

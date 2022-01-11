@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ChatService } from 'src/services/chat/chat.service';
-import {Chat} from "../../../../models/chat.model";
+import {Chat, Chats} from "../../../../models/chat.model";
 import {ErrorHandlerService} from "../../../../services/error_handler/error-handler.service";
 
 @Component({
@@ -13,12 +13,11 @@ export class ChatsNavComponent implements OnInit {
   private readonly pageSize: number;
   private pageNumber: number;
   private isScrolledDown: boolean;
-  @Input() public chats: Chat[];
+  public chats: Chats;
 
-  constructor(private chatService: ChatService,
-              private errorHandler: ErrorHandlerService) {
+  constructor(private chatService: ChatService, private errorHandler: ErrorHandlerService) {
     this.isChatCollectionOpened = false;
-    this.chats = [];
+    this.chats = new Chats();
     this.pageSize = 30;
     this.pageNumber = 0;
     this.isScrolledDown = false;
@@ -27,10 +26,12 @@ export class ChatsNavComponent implements OnInit {
   ngOnInit() {
     this.chatService.getUserChats(this.pageNumber, this.pageSize)
       .subscribe(
-        chats => this.chats = chats,
+        chats => this.chats = new Chats(chats),
         error => this.errorHandler.handleForbidden(error));
     this.chatService.newChatCreatedEvent
-      .subscribe(newChat => this.chats.push(newChat))
+      .subscribe(newChat => this.chats.add(newChat));
+    this.chatService.chatUpdatedEvent
+      .subscribe(updatedChat => this.chats.add(updatedChat));
   }
 
   public clickOpenListener(){
@@ -38,7 +39,7 @@ export class ChatsNavComponent implements OnInit {
   }
 
   public choseChatListener(chat: Chat){
-    this.chatService.changeCurrentChat(chat);
+    this.chatService.currentChat = chat;
   }
 
   public scrolledEventListener(){
@@ -47,10 +48,8 @@ export class ChatsNavComponent implements OnInit {
       this.chatService.getUserChats(this.pageNumber, this.pageSize)
         .subscribe(
           chats => {
-            this.chats = this.chats.concat(chats);
-            if (chats.length == 0) {
-              this.isScrolledDown = true;
-            }
+            this.chats.addAll(chats);
+            this.isScrolledDown = chats.length == 0;
           },
           error => this.errorHandler.handleForbidden(error));
     }

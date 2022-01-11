@@ -13,3 +13,23 @@ export class Chat {
     this.users = users;
   }
 }
+
+export class Chats implements Iterable<Chat>{
+  private chatMap: Map<number, Chat>;
+
+  constructor(chats: Chat[] = []) {
+    this.chatMap = new Map<number, Chat>(chats.map(chat => [chat.id, chat]));
+  }
+
+  public add(chat: Chat){
+    this.chatMap.set(chat.id, chat);
+  }
+
+  public addAll(chats: Chat[]){
+    chats.forEach(chat => this.add(chat));
+  }
+
+  [Symbol.iterator](): Iterator<Chat> {
+    return this.chatMap.values();
+  }
+}

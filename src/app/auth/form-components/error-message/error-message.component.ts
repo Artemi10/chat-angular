@@ -11,6 +11,6 @@ export class ErrorMessageComponent {
   constructor() { }
 
   public get isHidden(): boolean {
-    return this.errorMessage == '';
+    return this.errorMessage === undefined || this.errorMessage === '';
   }
 }

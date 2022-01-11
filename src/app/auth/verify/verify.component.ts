@@ -38,7 +38,7 @@ export class VerifyComponent {
             .then(() => this.isPreloaderOpened = false);
       },
         error => {
-          error.message = handleError(error);
+          this.errorMessage = handleError(error);
           this.isPreloaderOpened = false;
       });
   }

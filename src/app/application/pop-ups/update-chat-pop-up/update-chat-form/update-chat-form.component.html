@@ -4,8 +4,8 @@
   <div class="pop-up__form__users">
     <app-selected-user
       [login]="login"
-      *ngFor="let login of selectedUserLogins"
-      (deleteUserListener)="deleteSelectedUser(login)">
+      *ngFor="let login of chatUserLogins"
+      (deleteUserListener)="deleteUser(login)">
     </app-selected-user>
   </div>
   <app-error-message

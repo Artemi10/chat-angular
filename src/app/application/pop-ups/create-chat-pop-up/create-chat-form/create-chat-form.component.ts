@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ChatService} from "../../../../../services/chat/chat.service";
 import {LiveMessageService} from "../../../../../services/live_message/live-message.service";
 import {ErrorHandlerService} from "../../../../../services/error_handler/error-handler.service";
+import {UsersToUpdate} from "../../users-to-update";
 
 @Component({
   selector: 'app-create-chat-form',
@@ -12,8 +13,8 @@ import {ErrorHandlerService} from "../../../../../services/error_handler/error-h
 export class CreateChatFormComponent {
   public createChatForm: FormGroup;
   public errorMessage: string;
-  @Input() selectedUserLogins: Set<string> | undefined;
-  @Output() public closePopUpEvent: EventEmitter<any>;
+  @Input() usersToUpdate: UsersToUpdate | undefined;
+  @Output() closePopUpEvent: EventEmitter<any>;
 
   constructor(private chatService: ChatService, private liveMessageService: LiveMessageService,
               private errorHandler: ErrorHandlerService, private formBuilder: FormBuilder) {
@@ -32,11 +33,9 @@ export class CreateChatFormComponent {
   }
 
   public createChat(){
-    if (this.selectedUserLogins !== undefined){
-      this.chatService.createChat(this.chatName, [...this.selectedUserLogins])
-        .subscribe(
-          chat => {
-            this.chatService.newChatCreated(chat);
+    if (this.usersToUpdate !== undefined){
+      this.chatService.createChat(this.chatName, this.usersToUpdate.currentChatUserLogins)
+        .subscribe(() => {
             this.closePopUpEvent.emit();
             this.liveMessageService.refreshConnection();
           },
@@ -48,8 +47,8 @@ export class CreateChatFormComponent {
   }
 
   public deleteSelectedUser(login: string){
-    if (this.selectedUserLogins !== undefined){
-      this.selectedUserLogins.delete(login);
+    if (this.usersToUpdate !== undefined){
+      this.usersToUpdate.delete(login);
     }
   }
 }

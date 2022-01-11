@@ -5,7 +5,7 @@ import {LiveMessageService} from "../../../services/live_message/live-message.se
 import {ErrorHandlerService} from "../../../services/error_handler/error-handler.service";
 import { ChatService } from 'src/services/chat/chat.service';
 import {Chat} from "../../../models/chat.model";
-import {PopUps, PopUpType} from "../pop-ups/pop-ups";
+import {PopUpType} from "../pop-ups/pop-ups";
 
 @Component({
   selector: 'app-chat',
@@ -30,6 +30,7 @@ export class ChatComponent implements AfterViewChecked {
       message => this.addMessage(message),
       error => this.handleError(error)
     );
+    this.chat = this.chatService.currentChat;
     this.chatService.currentChatChangedEvent
       .subscribe(chat => {
         this.chat = chat;
